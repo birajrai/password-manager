@@ -72,7 +72,8 @@ const error = Astro.url.searchParams.get('error');
 
     <script type="module">
       import { createIcons, Eye, EyeOff } from 'lucide';
-      createIcons({ icons: { Eye, EyeOff } });
+      const icons = { Eye, EyeOff };
+      createIcons({ icons });
 
       const toggle = document.getElementById('toggle-pw');
       const input = document.getElementById('password');
@@ -83,7 +84,7 @@ const error = Astro.url.searchParams.get('error');
           toggle.innerHTML = hidden
             ? '<i data-lucide="eye-off" class="icon-sm"></i>'
             : '<i data-lucide="eye" class="icon-sm"></i>';
-          createIcons();
+          createIcons({ icons });
         });
       }
     </script>

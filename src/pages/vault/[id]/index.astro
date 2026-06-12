@@ -134,7 +134,8 @@ const safeUrl = entry[0].url && (entry[0].url.startsWith('http://') || entry[0].
 
     <script type="module">
       import { createIcons, Pencil, ArrowLeft, KeyRound, Globe, User, Lock, Copy, Folder, Trash2 } from 'lucide';
-      createIcons({ icons: { Pencil, ArrowLeft, KeyRound, Globe, User, Lock, Copy, Folder, Trash2 } });
+      const icons = { Pencil, ArrowLeft, KeyRound, Globe, User, Lock, Copy, Folder, Trash2 };
+      createIcons({ icons });
 
       const copyBtn = document.getElementById('copy-btn');
       if (copyBtn) {
@@ -145,7 +146,7 @@ const safeUrl = entry[0].url && (entry[0].url.startsWith('http://') || entry[0].
             await navigator.clipboard.writeText(text);
             const original = copyBtn.innerHTML;
             copyBtn.innerHTML = 'Copied!';
-            setTimeout(() => { copyBtn.innerHTML = original; createIcons(); }, 1500);
+            setTimeout(() => { copyBtn.innerHTML = original; createIcons({ icons }); }, 1500);
           } catch {
             copyBtn.textContent = 'Failed';
           }
