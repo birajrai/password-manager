@@ -41,9 +41,13 @@ const entries = await db
       <div class="navbar-inner">
         <h2 class="logo">Vault</h2>
         <nav class="flex gap">
-          <a href="/vault/new" class="btn btn-primary">+ Add</a>
+          <a href="/vault/new" class="btn btn-primary">
+            <i data-lucide="plus" class="icon-sm"></i> Add
+          </a>
           <form action="/api/logout" method="POST" style="display:inline">
-            <button type="submit" class="btn btn-secondary">Logout</button>
+            <button type="submit" class="btn btn-secondary">
+              <i data-lucide="log-out" class="icon-sm"></i> Logout
+            </button>
           </form>
         </nav>
       </div>
@@ -52,9 +56,12 @@ const entries = await db
     <main class="container">
       {entries.length === 0 ? (
         <div class="empty-state">
+          <i data-lucide="key-round" style="width:40px;height:40px;color:var(--text-muted);margin-bottom:0.75rem"></i>
           <h3>No entries yet</h3>
           <p class="muted">Add your first password entry</p>
-          <a href="/vault/new" class="btn btn-primary">Add entry</a>
+          <a href="/vault/new" class="btn btn-primary" style="margin-top:1.25rem">
+            <i data-lucide="plus" class="icon-sm"></i> Add entry
+          </a>
         </div>
       ) : (
         <div class="entry-list">
@@ -69,9 +76,12 @@ const entries = await db
             );
             return (
               <a href={`/vault/${entry.id}`} class="entry-card">
-                <div class="entry-info">
-                  <strong>{entry.title}</strong>
-                  {entry.url && <span class="muted">{entry.url}</span>}
+                <div style="display:flex;align-items:center;gap:0.75rem">
+                  <i data-lucide="key-round" style="width:18px;height:18px;color:var(--text-muted);flex-shrink:0"></i>
+                  <div class="entry-info">
+                    <strong>{entry.title}</strong>
+                    {entry.url && <span class="muted">{entry.url}</span>}
+                  </div>
                 </div>
                 <div class="entry-meta">
                   {entry.category && (
@@ -85,5 +95,10 @@ const entries = await db
         </div>
       )}
     </main>
+
+    <script type="module">
+      import { createIcons, Plus, LogOut, KeyRound } from 'lucide';
+      createIcons({ icons: { Plus, LogOut, KeyRound } });
+    </script>
   </body>
 </html>

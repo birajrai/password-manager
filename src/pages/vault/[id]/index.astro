@@ -58,17 +58,25 @@ const decrypted = decryptVaultPassword(
       <div class="navbar-inner">
         <h2 class="logo">Vault</h2>
         <nav class="flex gap">
-          <a href={`/vault/${id}/edit`} class="btn btn-primary">Edit</a>
-          <a href="/vault" class="btn btn-secondary">Back</a>
+          <a href={`/vault/${id}/edit`} class="btn btn-primary">
+            <i data-lucide="pencil" class="icon-sm"></i> Edit
+          </a>
+          <a href="/vault" class="btn btn-secondary">
+            <i data-lucide="arrow-left" class="icon-sm"></i> Back
+          </a>
         </nav>
       </div>
     </header>
 
     <main class="container">
       <div class="card">
-        <h3>{entry[0].title}</h3>
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem">
+          <i data-lucide="key-round" style="width:24px;height:24px;color:var(--text-muted)"></i>
+          <h3 style="margin-bottom:0">{entry[0].title}</h3>
+        </div>
 
         <div class="detail-row">
+          <i data-lucide="globe" class="detail-icon"></i>
           <span class="label">URL</span>
           {entry[0].url ? (
             <a href={entry[0].url} target="_blank" rel="noopener">
@@ -80,38 +88,46 @@ const decrypted = decryptVaultPassword(
         </div>
 
         <div class="detail-row">
+          <i data-lucide="user" class="detail-icon"></i>
           <span class="label">Username</span>
           <span>{entry[0].username || '—'}</span>
         </div>
 
         <div class="detail-row">
+          <i data-lucide="lock" class="detail-icon"></i>
           <span class="label">Password</span>
           <div class="password-display">
             <span id="password-text">{decrypted}</span>
             <button
-              class="btn btn-small"
-              onclick="navigator.clipboard.writeText(document.getElementById('password-text').textContent)"
+              class="btn btn-small btn-secondary"
+              onclick="navigator.clipboard.writeText(document.getElementById('password-text').textContent);this.textContent='Copied!';setTimeout(()=>this.innerHTML='',500)"
             >
-              Copy
+              <i data-lucide="copy" class="icon-sm"></i>
             </button>
           </div>
         </div>
 
         {entry[0].category && (
           <div class="detail-row">
+            <i data-lucide="folder" class="detail-icon"></i>
             <span class="label">Category</span>
             <span class="badge">{entry[0].category}</span>
           </div>
         )}
 
-        <div class="detail-row" style="margin-top: 1rem">
+        <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)">
           <form action={`/api/vault/delete/${id}`} method="POST" style="display:inline">
             <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this entry?')">
-              Delete
+              <i data-lucide="trash-2" class="icon-sm"></i> Delete
             </button>
           </form>
         </div>
       </div>
     </main>
+
+    <script type="module">
+      import { createIcons, Pencil, ArrowLeft, KeyRound, Globe, User, Lock, Copy, Folder, Trash2 } from 'lucide';
+      createIcons({ icons: { Pencil, ArrowLeft, KeyRound, Globe, User, Lock, Copy, Folder, Trash2 } });
+    </script>
   </body>
 </html>

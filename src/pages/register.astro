@@ -16,7 +16,10 @@ const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
   <body>
     <main class="center">
       <div class="card">
-        <h1>Vault</h1>
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem">
+          <i data-lucide="lock" style="width:20px;height:20px;color:var(--text-secondary)"></i>
+          <h1>Vault</h1>
+        </div>
         <p class="muted">Create a new account</p>
 
         {error && <div class="alert alert-error">{error}</div>}
@@ -24,27 +27,33 @@ const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         <form action="/api/register" method="POST">
           <div class="field">
             <label for="phone">Phone number</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              placeholder="+1234567890"
-              required
-              autocomplete="tel"
-            />
+            <div class="input-wrapper">
+              <i data-lucide="smartphone" class="input-icon"></i>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="+1234567890"
+                required
+                autocomplete="tel"
+              />
+            </div>
           </div>
 
           <div class="field">
             <label for="password">Master password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="At least 8 characters"
-              required
-              autocomplete="new-password"
-              minlength="8"
-            />
+            <div class="input-wrapper">
+              <i data-lucide="key" class="input-icon"></i>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="At least 8 characters"
+                required
+                autocomplete="new-password"
+                minlength="8"
+              />
+            </div>
           </div>
 
           <div class="field">
@@ -66,7 +75,7 @@ const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           </button>
         </form>
 
-        <p class="muted text-center">
+        <p class="muted text-center" style="margin-top:1rem">
           Already have an account? <a href="/login">Sign in</a>
         </p>
       </div>
@@ -81,6 +90,10 @@ const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       }
       window.onTurnstileSuccess = onTurnstileSuccess;
       window.onTurnstileExpired = onTurnstileExpired;
+    </script>
+    <script type="module">
+      import { createIcons, Lock, Smartphone, Key } from 'lucide';
+      createIcons({ icons: { Lock, Smartphone, Key } });
     </script>
   </body>
 </html>
