@@ -15,7 +15,7 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@astrojs/node": "^10.1.4",
+    "@astrojs/vercel": "^10.0.8",
     "@neondatabase/serverless": "^1.1.0",
     "argon2": "^0.44.0",
     "astro": "^6.4.6",
