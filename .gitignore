@@ -4,6 +4,9 @@ node_modules
 # design scratch
 wireframe.html
 
+# vercel
+.vercel
+
 # output
 out
 dist
