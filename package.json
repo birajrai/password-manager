@@ -7,7 +7,9 @@
     "build": "astro build",
     "start": "astro start",
     "db:generate": "drizzle-kit generate",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "db:migrate": "drizzle-kit migrate",
+    "vercel-build": "drizzle-kit migrate && astro build"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",
