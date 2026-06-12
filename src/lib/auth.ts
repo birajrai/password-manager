@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import { db } from './db';
 import { sessions, users } from './schema';
 import { eq } from 'drizzle-orm';
+import { cacheGet, cacheSet, cacheDelete } from './cache';
 
 export async function hashPassword(password: string): Promise<string> {
   return argon2.hash(password, {
@@ -57,6 +58,9 @@ export async function createSession(
 }
 
 export async function findSession(token: string) {
+  const cached = cacheGet<typeof sessions.$inferSelect>(`session:${token}`);
+  if (cached) return cached;
+
   const result = await db
     .select()
     .from(sessions)
@@ -68,11 +72,13 @@ export async function findSession(token: string) {
     await db.delete(sessions).where(eq(sessions.token, token));
     return null;
   }
+  cacheSet(`session:${token}`, session, 60_000);
   return session;
 }
 
 export async function deleteSession(token: string) {
   await db.delete(sessions).where(eq(sessions.token, token));
+  cacheDelete(`session:${token}`);
 }
 
 export async function deleteUserSessions(userId: string) {
@@ -85,4 +91,5 @@ export async function touchSession(token: string) {
     .update(sessions)
     .set({ expiresAt })
     .where(eq(sessions.token, token));
+  cacheDelete(`session:${token}`);
 }

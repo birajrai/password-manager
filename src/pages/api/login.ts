@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { verifyPassword, findUserByPhone, createSession, deleteUserSessions } from '../../lib/auth';
-import { deriveKey, encryptDerivedKey } from '../../lib/crypto';
+import { deriveKey, encryptDerivedKey, getSecretKey } from '../../lib/crypto';
 import { verifyTurnstile } from '../../lib/turnstile';
 import { checkRateLimit } from '../../lib/rate-limit';
 import { validatePhone, validatePassword, validateTurnstileToken, getClientIp } from '../../lib/helpers';
@@ -62,7 +62,7 @@ export const POST: APIRoute = async ({ request, redirect, cookies, clientAddress
   }
 
   const derivedKey = deriveKey(password, kd[0].salt, kd[0].iterations);
-  const secretKey = Buffer.from(process.env.ENCRYPTION_SECRET!, 'hex');
+  const secretKey = getSecretKey();
   const encrypted = encryptDerivedKey(derivedKey, secretKey);
 
   await deleteUserSessions(user.id);

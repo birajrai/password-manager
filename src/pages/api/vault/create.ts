@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { decryptDerivedKey, encryptVaultPassword } from '../../../lib/crypto';
+import { decryptDerivedKey, encryptVaultPassword, getSecretKey } from '../../../lib/crypto';
 import { sanitizeUrl } from '../../../lib/helpers';
 import { db } from '../../../lib/db';
 import { vaultEntries } from '../../../lib/schema';
@@ -35,7 +35,7 @@ export const POST: APIRoute = async ({ request, redirect, cookies, locals }) => 
     url = sanitized;
   }
 
-  const secretKey = Buffer.from(process.env.ENCRYPTION_SECRET!, 'hex');
+  const secretKey = getSecretKey();
   const vaultKey = decryptDerivedKey(
     {
       ciphertext: session.encryptedKey,

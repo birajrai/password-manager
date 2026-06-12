@@ -5,6 +5,15 @@ const KEY_LENGTH = 32;
 const PBKDF2_ITERATIONS = 600_000;
 const PBKDF2_DIGEST = 'sha512';
 
+let _secretKey: Buffer | null = null;
+
+export function getSecretKey(): Buffer {
+  if (!_secretKey) {
+    _secretKey = Buffer.from(process.env.ENCRYPTION_SECRET!, 'hex');
+  }
+  return _secretKey;
+}
+
 export function deriveKey(
   password: string,
   salt: string,

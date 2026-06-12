@@ -2,7 +2,7 @@
 import { db } from '../../../lib/db';
 import { vaultEntries } from '../../../lib/schema';
 import { eq } from 'drizzle-orm';
-import { decryptDerivedKey, decryptVaultPassword } from '../../../lib/crypto';
+import { decryptDerivedKey, decryptVaultPassword, getSecretKey } from '../../../lib/crypto';
 
 export const prerender = false;
 
@@ -26,7 +26,7 @@ if (!entry[0] || entry[0].userId !== session.userId) {
   return Astro.redirect('/vault');
 }
 
-const secretKey = Buffer.from(process.env.ENCRYPTION_SECRET!, 'hex');
+const secretKey = getSecretKey();
 const vaultKey = decryptDerivedKey(
   {
     ciphertext: session.encryptedKey,
