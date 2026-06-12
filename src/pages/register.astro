@@ -81,15 +81,10 @@ const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       </div>
     </main>
 
-    <script>
-      function onTurnstileSuccess() {
-        document.getElementById('submit-btn').disabled = false;
-      }
-      function onTurnstileExpired() {
-        document.getElementById('submit-btn').disabled = true;
-      }
-      window.onTurnstileSuccess = onTurnstileSuccess;
-      window.onTurnstileExpired = onTurnstileExpired;
+    <script is:inline>
+      document.getElementById('submit-btn').disabled = true;
+      window.onTurnstileSuccess = function () { document.getElementById('submit-btn').disabled = false; };
+      window.onTurnstileExpired = function () { document.getElementById('submit-btn').disabled = true; };
     </script>
     <script type="module">
       import { createIcons, Lock, Smartphone, Key } from 'lucide';
