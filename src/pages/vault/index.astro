@@ -1,0 +1,89 @@
+---
+import type { InferSelectModel } from 'drizzle-orm';
+import { db } from '../../lib/db';
+import { vaultEntries } from '../../lib/schema';
+import { eq } from 'drizzle-orm';
+import { decryptDerivedKey, decryptVaultPassword } from '../../lib/crypto';
+
+export const prerender = false;
+
+const session = Astro.locals.session;
+if (!session) {
+  return Astro.redirect('/login');
+}
+
+const secretKey = Buffer.from(process.env.ENCRYPTION_SECRET!, 'hex');
+const vaultKey = decryptDerivedKey(
+  {
+    ciphertext: session.encryptedKey,
+    iv: session.encryptedKeyIv,
+    tag: session.encryptedKeyTag,
+  },
+  secretKey
+);
+
+const entries = await db
+  .select()
+  .from(vaultEntries)
+  .where(eq(vaultEntries.userId, session.userId))
+  .orderBy(vaultEntries.createdAt);
+---
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vault</title>
+    <link rel="stylesheet" href="/styles/app.css" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="navbar-inner">
+        <h2 class="logo">Vault</h2>
+        <nav class="flex gap">
+          <a href="/vault/new" class="btn btn-primary">+ Add</a>
+          <form action="/api/logout" method="POST" style="display:inline">
+            <button type="submit" class="btn btn-secondary">Logout</button>
+          </form>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      {entries.length === 0 ? (
+        <div class="empty-state">
+          <h3>No entries yet</h3>
+          <p class="muted">Add your first password entry</p>
+          <a href="/vault/new" class="btn btn-primary">Add entry</a>
+        </div>
+      ) : (
+        <div class="entry-list">
+          {entries.map((entry) => {
+            const decrypted = decryptVaultPassword(
+              {
+                ciphertext: entry.ciphertext,
+                iv: entry.iv,
+                tag: entry.tag,
+              },
+              vaultKey
+            );
+            return (
+              <a href={`/vault/${entry.id}`} class="entry-card">
+                <div class="entry-info">
+                  <strong>{entry.title}</strong>
+                  {entry.url && <span class="muted">{entry.url}</span>}
+                </div>
+                <div class="entry-meta">
+                  {entry.category && (
+                    <span class="badge">{entry.category}</span>
+                  )}
+                  <span class="muted">{entry.username}</span>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      )}
+    </main>
+  </body>
+</html>

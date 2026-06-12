@@ -1,0 +1,68 @@
+---
+export const prerender = false;
+
+const session = Astro.locals.session;
+if (!session) {
+  return Astro.redirect('/login');
+}
+
+const error = Astro.url.searchParams.get('error');
+---
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>New entry - Vault</title>
+    <link rel="stylesheet" href="/styles/app.css" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="navbar-inner">
+        <h2 class="logo">Vault</h2>
+        <nav>
+          <a href="/vault" class="btn btn-secondary">Back</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="card">
+        <h3>New entry</h3>
+
+        {error && <div class="alert alert-error">{error}</div>}
+
+        <form action="/api/vault/create" method="POST">
+          <div class="field">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" required />
+          </div>
+
+          <div class="field">
+            <label for="url">URL</label>
+            <input type="url" id="url" name="url" placeholder="https://" />
+          </div>
+
+          <div class="field">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" />
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <input type="text" id="password" name="password" required />
+          </div>
+
+          <div class="field">
+            <label for="category">Category</label>
+            <input type="text" id="category" name="category" />
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">
+            Save
+          </button>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

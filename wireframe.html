@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vault - Wireframe</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #f5f5f7; color: #1d1d1f; padding: 2rem; }
+  h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.25rem; }
+  h2 { font-size: 1.125rem; font-weight: 500; color: #666; margin-bottom: 1.5rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem; }
+  .screen { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .screen-title { padding: 0.75rem 1rem; font-size: 0.8125rem; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #f0f0f0; }
+  .screen-body { padding: 1.25rem; }
+  .navbar { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #eee; margin-bottom: 1rem; }
+  .logo { font-weight: 600; font-size: 0.9375rem; }
+  .phone-frame { max-width: 380px; margin: 0 auto; background: #fff; border: 1px solid #e0e0e0; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .phone-header { padding: 1rem 1.25rem 0.5rem; text-align: center; }
+  .phone-body { padding: 0.5rem 1.25rem 1.5rem; }
+  .field { margin-bottom: 0.875rem; }
+  .field label { display: block; font-size: 0.75rem; color: #999; margin-bottom: 0.25rem; font-weight: 500; }
+  .input { width: 100%; padding: 0.625rem 0.75rem; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 0.875rem; background: #fafafa; }
+  .input-sm { padding: 0.5rem 0.625rem; font-size: 0.8125rem; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8125rem; font-weight: 500; border: none; cursor: default; }
+  .btn-primary { background: #1d1d1f; color: #fff; }
+  .btn-primary:disabled { background: #1d1d1f; opacity: 0.25; }
+  .btn-secondary { background: transparent; border: 1px solid #e0e0e0; color: #1d1d1f; }
+  .btn-danger { background: transparent; border: 1px solid #e0e0e0; color: #dc2626; }
+  .btn-full { width: 100%; }
+  .btn-sm { padding: 0.375rem 0.625rem; font-size: 0.75rem; }
+  .captcha-placeholder { height: 60px; background: #f5f5f5; border: 1px dashed #d0d0d0; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: #bbb; }
+  .entry-card { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid #eee; border-radius: 8px; margin-bottom: 0.375rem; }
+  .entry-card:last-child { margin-bottom: 0; }
+  .detail-row { display: flex; align-items: baseline; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid #eee; font-size: 0.875rem; }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-label { color: #999; font-size: 0.75rem; min-width: 64px; }
+  .badge { display: inline-block; padding: 0.125rem 0.5rem; background: #f0f0f0; border-radius: 999px; font-size: 0.6875rem; color: #888; }
+  .muted { color: #999; font-size: 0.8125rem; }
+  .empty-state { text-align: center; padding: 3rem 0; }
+  .arrow { text-align: center; padding: 0.5rem; color: #ccc; font-size: 1.25rem; }
+  .flow { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+  .flow-step { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.8125rem; font-weight: 500; }
+  .flow-arrow { color: #ccc; font-size: 1rem; }
+  .help-text { font-size: 0.75rem; color: #aaa; margin-top: 0.375rem; }
+</style>
+</head>
+<body>
+
+<h1>Vault &mdash; Full App Wireframe</h1>
+<h2>Password Manager &middot; 7 screens</h2>
+
+<div class="flow">
+  <span class="flow-step">Register</span>
+  <span class="flow-arrow">&rarr;</span>
+  <span class="flow-step">Login</span>
+  <span class="flow-arrow">&rarr;</span>
+  <span class="flow-step">Vault List</span>
+  <span class="flow-arrow">&rarr;</span>
+  <span class="flow-step">Entry Detail</span>
+</div>
+
+<div class="grid">
+
+  <!-- 1. Register -->
+  <div class="screen">
+    <div class="screen-title">1. Register</div>
+    <div class="screen-body">
+      <div class="phone-frame" style="max-width:340px">
+        <div class="phone-header">
+          <h3 style="font-size:1.125rem;font-weight:600;margin-bottom:0.125rem">Vault</h3>
+          <p class="muted">Create your account</p>
+        </div>
+        <div class="phone-body">
+          <div class="field">
+            <label>Phone number</label>
+            <div class="input">+1 555-0123</div>
+          </div>
+          <div class="field">
+            <label>Master password</label>
+            <div class="input">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</div>
+            <div class="help-text">At least 8 characters</div>
+          </div>
+          <div class="field">
+            <label>Verification</label>
+            <div class="captcha-placeholder">[ Turnstile Captcha ]</div>
+          </div>
+          <div class="btn btn-primary btn-full" style="opacity:0.3">Create account</div>
+          <p style="font-size:0.75rem;color:#999;text-align:center;margin-top:0.75rem">Have an account? <span style="text-decoration:underline">Sign in</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Login -->
+  <div class="screen">
+    <div class="screen-title">2. Login</div>
+    <div class="screen-body">
+      <div class="phone-frame" style="max-width:340px">
+        <div class="phone-header">
+          <h3 style="font-size:1.125rem;font-weight:600;margin-bottom:0.125rem">Vault</h3>
+          <p class="muted">Sign in to your account</p>
+        </div>
+        <div class="phone-body">
+          <div class="field">
+            <label>Phone number</label>
+            <div class="input">+1 555-0123</div>
+          </div>
+          <div class="field">
+            <label>Master password</label>
+            <div class="input">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</div>
+          </div>
+          <div class="field">
+            <label>Verification</label>
+            <div class="captcha-placeholder">[ Turnstile Captcha ]</div>
+          </div>
+          <div class="btn btn-primary btn-full" style="opacity:1">Sign in</div>
+          <p style="font-size:0.75rem;color:#999;text-align:center;margin-top:0.75rem">No account? <span style="text-decoration:underline">Register</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Vault List (empty) -->
+  <div class="screen">
+    <div class="screen-title">3. Vault List &mdash; Empty</div>
+    <div class="screen-body">
+      <div class="phone-frame" style="max-width:340px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.25rem 0;font-size:0.875rem;font-weight:600">Vault</div>
+        <div class="phone-body">
+          <div class="empty-state">
+            <p style="font-size:2rem;margin-bottom:0.5rem">&boxempty;</p>
+            <p style="font-weight:500;font-size:0.9375rem">No entries yet</p>
+            <p class="muted">Add your first password</p>
+            <div class="btn btn-primary" style="margin:1.25rem auto 0;display:inline-flex">+ Add entry</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Vault List (with entries) -->
+  <div class="screen">
+    <div class="screen-title">4. Vault List &mdash; With entries</div>
+    <div class="screen-body">
+      <div class="phone-frame" style="max-width:340px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.25rem 0.5rem">
+          <span style="font-size:0.875rem;font-weight:600">Vault</span>
+          <div style="display:flex;gap:0.375rem">
+            <span class="btn btn-sm btn-secondary">Logout</span>
+            <span class="btn btn-sm btn-primary">+ Add</span>
+          </div>
+        </div>
+        <div class="phone-body" style="padding-top:0">
+          <div class="entry-card">
+            <div>
+              <div style="font-size:0.875rem;font-weight:500">GitHub</div>
+              <div class="muted" style="font-size:0.75rem">github.com</div>
+            </div>
+            <span class="badge">Dev</span>
+          </div>
+          <div class="entry-card">
+            <div>
+              <div style="font-size:0.875rem;font-weight:500">Gmail</div>
+              <div class="muted" style="font-size:0.75rem">mail.google.com</div>
+            </div>
+            <span style="font-size:0.75rem;color:#999">user@gmail.com</span>
+          </div>
+          <div class="entry-card" style="border-color:#ddd">
+            <div>
+              <div style="font-size:0.875rem;font-weight:500">AWS Console</div>
+              <div class="muted" style="font-size:0.75rem">aws.amazon.com</div>
+            </div>
+            <span class="badge">Work</span>
+          </div>
+          <div class="entry-card" style="border-color:#ddd">
+            <div>
+              <div style="font-size:0.875rem;font-weight:500">Netflix</div>
+              <div class="muted" style="font-size:0.75rem">netflix.com</div>
+            </div>
+            <span style="font-size:0.75rem;color:#999">user@email.com</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. New Entry Form -->
+  <div class="screen">
+    <div class="screen-title">5. New Entry</div>
+    <div class="screen-body">
+      <div class="phone-frame" style="max-width:340px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.25rem 0.5rem">
+          <span style="font-size:0.875rem;font-weight:500">New entry</span>
+          <span class="btn btn-sm btn-secondary">Cancel</span>
+        </div>
+        <div class="phone-body" style="padding-top:0">
+          <div class="field">
+            <label>Title</label>
+            <div class="input input-sm">GitHub</div>
+          </div>
+          <div class="field">
+            <label>URL</label>
+            <div class="input input-sm">https://github.com</div>
+          </div>
+          <div class="field">
+            <label>Username</label>
+            <div class="input input-sm">username</div>
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <div class="input input-sm">ghp_xxxxxxxxxxxx</div>
+          </div>
+          <div class="field">
+            <label>Category</label>
+            <div class="input input-sm">Dev</div>
+          </div>
+          <div class="btn btn-primary btn-full">Save</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Entry Detail -->
+  <div class="screen">
+    <div class="screen-title">6. Entry Detail</div>
+    <div class="screen-body">
+      <div class="phone-frame" style="max-width:340px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.25rem 0.5rem">
+          <span style="font-size:0.875rem;font-weight:500">GitHub</span>
+          <div style="display:flex;gap:0.375rem">
+            <span class="btn btn-sm btn-secondary">Back</span>
+            <span class="btn btn-sm btn-primary">Edit</span>
+          </div>
+        </div>
+        <div class="phone-body" style="padding-top:0">
+          <div class="detail-row">
+            <span class="detail-label">URL</span>
+            <span>github.com</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Username</span>
+            <span>username</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Password</span>
+            <span style="display:flex;gap:0.375rem;align-items:center">
+              <span style="font-family:monospace">ghp_xxxxxxxxxxxx</span>
+              <span class="btn btn-sm btn-secondary" style="padding:0.25rem 0.5rem;font-size:0.6875rem">Copy</span>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Category</span>
+            <span class="badge">Dev</span>
+          </div>
+          <div style="margin-top:0.75rem">
+            <span class="btn btn-sm btn-danger">Delete</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Edit Entry -->
+  <div class="screen">
+    <div class="screen-title">7. Edit Entry</div>
+    <div class="screen-body">
+      <div class="phone-frame" style="max-width:340px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.25rem 0.5rem">
+          <span style="font-size:0.875rem;font-weight:500">Edit entry</span>
+          <span class="btn btn-sm btn-secondary">Cancel</span>
+        </div>
+        <div class="phone-body" style="padding-top:0">
+          <div class="field">
+            <label>Title</label>
+            <div class="input input-sm">GitHub</div>
+          </div>
+          <div class="field">
+            <label>URL</label>
+            <div class="input input-sm">https://github.com</div>
+          </div>
+          <div class="field">
+            <label>Username</label>
+            <div class="input input-sm">username</div>
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <div class="input input-sm">new_password_here</div>
+          </div>
+          <div class="field">
+            <label>Category</label>
+            <div class="input input-sm">Dev</div>
+          </div>
+          <div class="btn btn-primary btn-full">Save changes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p style="margin-top:2rem;font-size:0.8125rem;color:#999;text-align:center">All 7 screens of the Vault password manager &mdash; phone-optimized layout</p>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "password-manager",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "start": "astro start",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "drizzle-kit": "^0.31.10",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@astrojs/node": "^10.1.4",
+    "@neondatabase/serverless": "^1.1.0",
+    "argon2": "^0.44.0",
+    "astro": "^6.4.6",
+    "drizzle-orm": "^0.45.2",
+    "nanoid": "^5.1.11"
+  }
+}

@@ -1,0 +1,86 @@
+---
+export const prerender = false;
+
+const error = Astro.url.searchParams.get('error');
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Register - Vault</title>
+    <link rel="stylesheet" href="/styles/app.css" />
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  </head>
+  <body>
+    <main class="center">
+      <div class="card">
+        <h1>Vault</h1>
+        <p class="muted">Create a new account</p>
+
+        {error && <div class="alert alert-error">{error}</div>}
+
+        <form action="/api/register" method="POST">
+          <div class="field">
+            <label for="phone">Phone number</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="+1234567890"
+              required
+              autocomplete="tel"
+            />
+          </div>
+
+          <div class="field">
+            <label for="password">Master password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="At least 8 characters"
+              required
+              autocomplete="new-password"
+              minlength="8"
+            />
+          </div>
+
+          <div class="field">
+            <div
+              class="cf-turnstile"
+              data-sitekey={siteKey}
+              data-callback="onTurnstileSuccess"
+              data-expired-callback="onTurnstileExpired"
+            ></div>
+          </div>
+
+          <button
+            type="submit"
+            id="submit-btn"
+            class="btn btn-primary btn-full"
+            disabled
+          >
+            Create account
+          </button>
+        </form>
+
+        <p class="muted text-center">
+          Already have an account? <a href="/login">Sign in</a>
+        </p>
+      </div>
+    </main>
+
+    <script>
+      function onTurnstileSuccess() {
+        document.getElementById('submit-btn').disabled = false;
+      }
+      function onTurnstileExpired() {
+        document.getElementById('submit-btn').disabled = true;
+      }
+      window.onTurnstileSuccess = onTurnstileSuccess;
+      window.onTurnstileExpired = onTurnstileExpired;
+    </script>
+  </body>
+</html>

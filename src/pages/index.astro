@@ -1,0 +1,29 @@
+---
+export const prerender = false;
+
+const session = Astro.locals.session;
+if (session) {
+  return Astro.redirect('/vault');
+}
+---
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vault</title>
+    <link rel="stylesheet" href="/styles/app.css" />
+  </head>
+  <body>
+    <main class="center">
+      <div class="card">
+        <h1>Vault</h1>
+        <p class="muted">Secure password manager</p>
+        <div class="flex gap">
+          <a href="/login" class="btn btn-primary">Login</a>
+          <a href="/register" class="btn btn-secondary">Register</a>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,117 @@
+---
+import { db } from '../../../lib/db';
+import { vaultEntries } from '../../../lib/schema';
+import { eq } from 'drizzle-orm';
+import { decryptDerivedKey, decryptVaultPassword } from '../../../lib/crypto';
+
+export const prerender = false;
+
+const session = Astro.locals.session;
+if (!session) {
+  return Astro.redirect('/login');
+}
+
+const id = Astro.params.id;
+if (!id) {
+  return Astro.redirect('/vault');
+}
+
+const entry = await db
+  .select()
+  .from(vaultEntries)
+  .where(eq(vaultEntries.id, id))
+  .limit(1);
+
+if (!entry[0] || entry[0].userId !== session.userId) {
+  return Astro.redirect('/vault');
+}
+
+const secretKey = Buffer.from(process.env.ENCRYPTION_SECRET!, 'hex');
+const vaultKey = decryptDerivedKey(
+  {
+    ciphertext: session.encryptedKey,
+    iv: session.encryptedKeyIv,
+    tag: session.encryptedKeyTag,
+  },
+  secretKey
+);
+
+const decrypted = decryptVaultPassword(
+  {
+    ciphertext: entry[0].ciphertext,
+    iv: entry[0].iv,
+    tag: entry[0].tag,
+  },
+  vaultKey
+);
+---
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{entry[0].title} - Vault</title>
+    <link rel="stylesheet" href="/styles/app.css" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="navbar-inner">
+        <h2 class="logo">Vault</h2>
+        <nav class="flex gap">
+          <a href={`/vault/${id}/edit`} class="btn btn-primary">Edit</a>
+          <a href="/vault" class="btn btn-secondary">Back</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="card">
+        <h3>{entry[0].title}</h3>
+
+        <div class="detail-row">
+          <span class="label">URL</span>
+          {entry[0].url ? (
+            <a href={entry[0].url} target="_blank" rel="noopener">
+              {entry[0].url}
+            </a>
+          ) : (
+            <span class="muted">—</span>
+          )}
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Username</span>
+          <span>{entry[0].username || '—'}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Password</span>
+          <div class="password-display">
+            <span id="password-text">{decrypted}</span>
+            <button
+              class="btn btn-small"
+              onclick="navigator.clipboard.writeText(document.getElementById('password-text').textContent)"
+            >
+              Copy
+            </button>
+          </div>
+        </div>
+
+        {entry[0].category && (
+          <div class="detail-row">
+            <span class="label">Category</span>
+            <span class="badge">{entry[0].category}</span>
+          </div>
+        )}
+
+        <div class="detail-row" style="margin-top: 1rem">
+          <form action={`/api/vault/delete/${id}`} method="POST" style="display:inline">
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this entry?')">
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
