@@ -3,7 +3,7 @@ import { verifyPassword, findUserByPhone, createSession, deleteUserSessions } fr
 import { deriveKey, encryptDerivedKey } from '../../lib/crypto';
 import { verifyTurnstile } from '../../lib/turnstile';
 import { checkRateLimit } from '../../lib/rate-limit';
-import { validatePhone, validateTurnstileToken, getClientIp } from '../../lib/helpers';
+import { validatePhone, validatePassword, validateTurnstileToken, getClientIp } from '../../lib/helpers';
 import { db } from '../../lib/db';
 import { keyDerivation } from '../../lib/schema';
 import { eq } from 'drizzle-orm';
@@ -24,6 +24,11 @@ export const POST: APIRoute = async ({ request, redirect, cookies, clientAddress
 
   if (!validatePhone(normalizedPhone)) {
     return redirect('/login?error=Invalid+phone+number+format');
+  }
+
+  const pwError = validatePassword(password);
+  if (pwError) {
+    return redirect(`/login?error=${encodeURIComponent(pwError)}`);
   }
 
   const ip = getClientIp(request) ?? clientAddress;

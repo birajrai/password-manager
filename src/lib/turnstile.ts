@@ -10,11 +10,23 @@ export async function verifyTurnstile(
   formData.append('response', token);
   if (ip) formData.append('remoteip', ip);
 
-  const response = await fetch(TURNSTILE_VERIFY_URL, {
-    method: 'POST',
-    body: formData,
-  });
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
 
-  const data = await response.json();
-  return data.success === true;
+    const response = await fetch(TURNSTILE_VERIFY_URL, {
+      method: 'POST',
+      body: formData,
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) return false;
+
+    const data = await response.json();
+    return data.success === true;
+  } catch {
+    return false;
+  }
 }

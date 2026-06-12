@@ -1,6 +1,9 @@
 # dependencies (bun install)
 node_modules
 
+# design scratch
+wireframe.html
+
 # output
 out
 dist

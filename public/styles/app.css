@@ -326,6 +326,37 @@ input::placeholder {
   margin-right: 0.375rem;
 }
 
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-field input {
+  padding-right: 2.5rem;
+}
+
+.btn-toggle {
+  position: absolute;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0;
+}
+
+.btn-toggle:hover {
+  color: var(--text);
+  background: var(--bg);
+}
+
 .password-display {
   display: flex;
   align-items: center;

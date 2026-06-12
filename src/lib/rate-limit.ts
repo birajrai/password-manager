@@ -1,10 +1,13 @@
-const store = new Map<string, { count: number; resetAt: number }>();
+const store = new Map<string, number[]>();
 
 setInterval(() => {
   const now = Date.now();
-  for (const [key, entry] of store) {
-    if (now > entry.resetAt) {
+  for (const [key, timestamps] of store) {
+    const valid = timestamps.filter((t) => now - t < 60000);
+    if (valid.length === 0) {
       store.delete(key);
+    } else {
+      store.set(key, valid);
     }
   }
 }, 60_000);
@@ -15,17 +18,16 @@ export function checkRateLimit(
   windowMs: number
 ): boolean {
   const now = Date.now();
-  const entry = store.get(key);
+  const cutoff = now - windowMs;
 
-  if (!entry || now > entry.resetAt) {
-    store.set(key, { count: 1, resetAt: now + windowMs });
-    return true;
-  }
+  const timestamps = store.get(key) ?? [];
+  const valid = timestamps.filter((t) => t > cutoff);
 
-  if (entry.count >= maxAttempts) {
+  if (valid.length >= maxAttempts) {
     return false;
   }
 
-  entry.count++;
+  valid.push(now);
+  store.set(key, valid);
   return true;
 }

@@ -5,8 +5,24 @@ export function validatePhone(phone: string): boolean {
 }
 
 export function validatePassword(password: string): string | null {
+  if (typeof password !== 'string') return 'Password is required';
   if (password.length < 8) return 'Password must be at least 8 characters';
   if (password.length > 128) return 'Password must be at most 128 characters';
+  return null;
+}
+
+export function sanitizeUrl(url: string): string | null {
+  if (!url || url.trim() === '') return '';
+  const trimmed = url.trim();
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return trimmed;
+  }
+  if (trimmed.startsWith('//')) {
+    return `https:${trimmed}`;
+  }
+  if (!trimmed.includes('://') && !trimmed.startsWith('#')) {
+    return `https://${trimmed}`;
+  }
   return null;
 }
 

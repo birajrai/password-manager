@@ -44,6 +44,10 @@ const decrypted = decryptVaultPassword(
   },
   vaultKey
 );
+
+const safeUrl = entry[0].url && (entry[0].url.startsWith('http://') || entry[0].url.startsWith('https://'))
+  ? entry[0].url
+  : null;
 ---
 
 <html>
@@ -78,10 +82,12 @@ const decrypted = decryptVaultPassword(
         <div class="detail-row">
           <i data-lucide="globe" class="detail-icon"></i>
           <span class="label">URL</span>
-          {entry[0].url ? (
-            <a href={entry[0].url} target="_blank" rel="noopener">
+          {safeUrl ? (
+            <a href={safeUrl} target="_blank" rel="noopener noreferrer">
               {entry[0].url}
             </a>
+          ) : entry[0].url ? (
+            <span>{entry[0].url}</span>
           ) : (
             <span class="muted">—</span>
           )}
@@ -99,8 +105,9 @@ const decrypted = decryptVaultPassword(
           <div class="password-display">
             <span id="password-text">{decrypted}</span>
             <button
+              id="copy-btn"
               class="btn btn-small btn-secondary"
-              onclick="navigator.clipboard.writeText(document.getElementById('password-text').textContent);this.textContent='Copied!';setTimeout(()=>this.innerHTML='',500)"
+              data-copy
             >
               <i data-lucide="copy" class="icon-sm"></i>
             </button>
@@ -128,6 +135,22 @@ const decrypted = decryptVaultPassword(
     <script type="module">
       import { createIcons, Pencil, ArrowLeft, KeyRound, Globe, User, Lock, Copy, Folder, Trash2 } from 'lucide';
       createIcons({ icons: { Pencil, ArrowLeft, KeyRound, Globe, User, Lock, Copy, Folder, Trash2 } });
+
+      const copyBtn = document.getElementById('copy-btn');
+      if (copyBtn) {
+        copyBtn.addEventListener('click', async () => {
+          const text = document.getElementById('password-text')?.textContent;
+          if (!text) return;
+          try {
+            await navigator.clipboard.writeText(text);
+            const original = copyBtn.innerHTML;
+            copyBtn.innerHTML = 'Copied!';
+            setTimeout(() => { copyBtn.innerHTML = original; createIcons(); }, 1500);
+          } catch {
+            copyBtn.textContent = 'Failed';
+          }
+        });
+      }
     </script>
   </body>
 </html>

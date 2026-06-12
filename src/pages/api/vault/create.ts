@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { decryptDerivedKey, encryptVaultPassword } from '../../../lib/crypto';
+import { sanitizeUrl } from '../../../lib/helpers';
 import { db } from '../../../lib/db';
 import { vaultEntries } from '../../../lib/schema';
 
@@ -12,14 +13,26 @@ export const POST: APIRoute = async ({ request, redirect, cookies, locals }) => 
   }
 
   const formData = await request.formData();
-  const title = formData.get('title') as string | null;
-  const url = formData.get('url') as string | null;
-  const username = formData.get('username') as string | null;
+  const title = ((formData.get('title') as string) ?? '').trim();
+  let url = ((formData.get('url') as string) ?? '').trim();
+  const username = ((formData.get('username') as string) ?? '').trim();
   const password = formData.get('password') as string | null;
-  const category = formData.get('category') as string | null;
+  const category = ((formData.get('category') as string) ?? '').trim();
 
-  if (!title || !password) {
-    return redirect('/vault/new?error=Title+and+password+are+required');
+  if (!title) {
+    return redirect('/vault/new?error=Title+is+required');
+  }
+
+  if (!password || password.length > 4096) {
+    return redirect('/vault/new?error=Invalid+password');
+  }
+
+  if (url) {
+    const sanitized = sanitizeUrl(url);
+    if (sanitized === null) {
+      return redirect('/vault/new?error=Invalid+URL');
+    }
+    url = sanitized;
   }
 
   const secretKey = Buffer.from(process.env.ENCRYPTION_SECRET!, 'hex');
@@ -37,12 +50,12 @@ export const POST: APIRoute = async ({ request, redirect, cookies, locals }) => 
   await db.insert(vaultEntries).values({
     userId: session.userId,
     title,
-    url: url ?? '',
-    username: username ?? '',
+    url,
+    username,
     ciphertext: encrypted.ciphertext,
     iv: encrypted.iv,
     tag: encrypted.tag,
-    category: category ?? '',
+    category,
   });
 
   return redirect('/vault');

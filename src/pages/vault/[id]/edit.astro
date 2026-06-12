@@ -106,13 +106,18 @@ const error = Astro.url.searchParams.get('error');
 
           <div class="field">
             <label for="password">Password</label>
-            <input
-              type="text"
-              id="password"
-              name="password"
-              value={decrypted}
-              required
-            />
+            <div class="password-field">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={decrypted}
+                required
+              />
+              <button type="button" class="btn-toggle" id="toggle-pw" data-toggle="password" aria-label="Toggle password visibility">
+                <i data-lucide="eye" class="icon-sm"></i>
+              </button>
+            </div>
           </div>
 
           <div class="field">
@@ -131,5 +136,23 @@ const error = Astro.url.searchParams.get('error');
         </form>
       </div>
     </main>
+
+    <script type="module">
+      import { createIcons, Eye, EyeOff } from 'lucide';
+      createIcons({ icons: { Eye, EyeOff } });
+
+      const toggle = document.getElementById('toggle-pw');
+      const input = document.getElementById('password');
+      if (toggle && input) {
+        toggle.addEventListener('click', () => {
+          const hidden = input.type === 'password';
+          input.type = hidden ? 'text' : 'password';
+          toggle.innerHTML = hidden
+            ? '<i data-lucide="eye-off" class="icon-sm"></i>'
+            : '<i data-lucide="eye" class="icon-sm"></i>';
+          createIcons();
+        });
+      }
+    </script>
   </body>
 </html>

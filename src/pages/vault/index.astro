@@ -3,7 +3,7 @@ import type { InferSelectModel } from 'drizzle-orm';
 import { db } from '../../lib/db';
 import { vaultEntries } from '../../lib/schema';
 import { eq } from 'drizzle-orm';
-import { decryptDerivedKey, decryptVaultPassword } from '../../lib/crypto';
+import { decryptDerivedKey } from '../../lib/crypto';
 
 export const prerender = false;
 
@@ -11,16 +11,6 @@ const session = Astro.locals.session;
 if (!session) {
   return Astro.redirect('/login');
 }
-
-const secretKey = Buffer.from(process.env.ENCRYPTION_SECRET!, 'hex');
-const vaultKey = decryptDerivedKey(
-  {
-    ciphertext: session.encryptedKey,
-    iv: session.encryptedKeyIv,
-    tag: session.encryptedKeyTag,
-  },
-  secretKey
-);
 
 const entries = await db
   .select()
@@ -65,33 +55,23 @@ const entries = await db
         </div>
       ) : (
         <div class="entry-list">
-          {entries.map((entry) => {
-            const decrypted = decryptVaultPassword(
-              {
-                ciphertext: entry.ciphertext,
-                iv: entry.iv,
-                tag: entry.tag,
-              },
-              vaultKey
-            );
-            return (
-              <a href={`/vault/${entry.id}`} class="entry-card">
-                <div style="display:flex;align-items:center;gap:0.75rem">
-                  <i data-lucide="key-round" style="width:18px;height:18px;color:var(--text-muted);flex-shrink:0"></i>
-                  <div class="entry-info">
-                    <strong>{entry.title}</strong>
-                    {entry.url && <span class="muted">{entry.url}</span>}
-                  </div>
+          {entries.map((entry) => (
+            <a href={`/vault/${entry.id}`} class="entry-card">
+              <div style="display:flex;align-items:center;gap:0.75rem">
+                <i data-lucide="key-round" style="width:18px;height:18px;color:var(--text-muted);flex-shrink:0"></i>
+                <div class="entry-info">
+                  <strong>{entry.title}</strong>
+                  {entry.url && <span class="muted">{entry.url}</span>}
                 </div>
-                <div class="entry-meta">
-                  {entry.category && (
-                    <span class="badge">{entry.category}</span>
-                  )}
-                  <span class="muted">{entry.username}</span>
-                </div>
-              </a>
-            );
-          })}
+              </div>
+              <div class="entry-meta">
+                {entry.category && (
+                  <span class="badge">{entry.category}</span>
+                )}
+                <span class="muted">{entry.username}</span>
+              </div>
+            </a>
+          ))}
         </div>
       )}
     </main>
